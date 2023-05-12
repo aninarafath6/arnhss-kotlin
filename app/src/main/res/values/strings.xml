@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">arnhss</string>
     <string name="splash_sub">BY COMPUTER ⚡️ SCIENCE 2021-23</string>
+    <string name="onboard_title">Ar Nagar Hss- A complete educational institute</string>
+    <string name="onboard_content"></string>
+    <string name="onbaord_content">An Interface to share the Creative Works and Others \n By Ar Nagar Hss Students and Teachers. A Small\n Innovation By COMPUTER⚡️SCIENCE\n 2021-23.</string>
+    <string name="get_started">Get Started</string>
+    <string name="todo">TODO</string>
+    <string name="sample">TODO</string>
 </resources>
