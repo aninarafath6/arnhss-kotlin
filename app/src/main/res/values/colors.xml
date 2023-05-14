@@ -9,4 +9,7 @@
     <color name="black">#FF000000</color>
     <color name="shaded_black">#1E1E1E</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="light_gray">#F6F6F6</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="cursor_color">#707070</color>
 </resources>

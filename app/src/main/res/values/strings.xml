@@ -6,5 +6,8 @@
     <string name="onbaord_content">An Interface to share the Creative Works and Others \n By Ar Nagar Hss Students and Teachers. A Small\n Innovation By COMPUTER⚡️SCIENCE\n 2021-23.</string>
     <string name="get_started">Get Started</string>
     <string name="todo">TODO</string>
-    <string name="sample">TODO</string>
+    <string name="sample"> </string>
+    <string name="login_title">Login with Mobile Number</string>
+    <string name="login_subtitle">Enter your mobile number to Continue</string>
+    <string name="TOD">TODO</string>
 </resources>
