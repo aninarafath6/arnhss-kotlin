@@ -8,6 +8,7 @@
     app:title=" "
     android:layout_height="?attr/actionBarSize">
     <ImageView
+        android:id="@+id/back_press"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:tint="@color/black"
