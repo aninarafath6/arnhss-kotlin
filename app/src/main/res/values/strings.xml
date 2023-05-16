@@ -10,4 +10,7 @@
     <string name="login_title">Login with Mobile Number</string>
     <string name="login_subtitle">Enter your mobile number to Continue</string>
     <string name="TOD">TODO</string>
+    <string name="_91">+91</string>
+    <string name="input_hint_for_phone_number">Enter your mobile number</string>
+    <string name="terms_conditions_title">By continuing, you agree to our Terms of Terms of Service and Privacy Policy</string>
 </resources>

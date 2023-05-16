@@ -27,7 +27,6 @@ class OnboardActivity : AppCompatActivity() {
     private fun getStarted(){
         val intent = Intent(this,LoginActivity::class.java)
         startActivity(intent)
-        finish()
         print("here")
     }
 }
