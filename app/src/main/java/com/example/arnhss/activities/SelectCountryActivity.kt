@@ -1,8 +1,12 @@
 package com.example.arnhss.activities
 
+import android.content.Context
 import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.KeyEvent
+import android.view.inputmethod.InputMethodManager
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.example.arnhss.R
@@ -27,6 +31,9 @@ class SelectCountryActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.circularProgress.isVisible = true
+
+//        onNavPop()
+
         lifecycleScope.launch(Dispatchers.Default) {
 
             convertJsonToDataObjects()
@@ -38,8 +45,31 @@ class SelectCountryActivity : AppCompatActivity() {
 
         }
 
+        onBackPressedDispatcher.addCallback(this,onBackPressCallback )
 
     }
+
+
+    private val onBackPressCallback = object: OnBackPressedCallback(true){
+        override fun handleOnBackPressed() {
+            // Check if the keyboard is open
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            var isKeyboardOpen = imm.isAcceptingText
+
+            if (isKeyboardOpen) {
+                // If the keyboard is open, close it
+                imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+                binding.countrySearchBox.clearFocus()
+                } else {
+                // If the keyboard is not open, finish the activity
+                finish()
+            }
+        }
+
+    }
+
+
+
 
     private fun convertJsonToDataObjects(): List<Country> {
         Thread.sleep(1000L)
@@ -53,4 +83,29 @@ class SelectCountryActivity : AppCompatActivity() {
 
         return Gson().fromJson(jsonText, countryListType)
     }
+//
+//    private fun onNavPop(){
+//
+//
+//
+//        binding.backPress.setOnClickListener{
+//            // Check if the keyboard is open
+//            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//            val isKeyboardOpen = imm.isAcceptingText
+//
+//            if (isKeyboardOpen) {
+//                // If the keyboard is open, close it
+//                imm.hideSoftInputFromWindow(binding.backPress.windowToken, 0)
+//                binding.countrySearchBox.clearFocus()
+//                binding.backPress.clearFocus()
+//            } else {
+//                // If the keyboard is not open, finish the activity or perform your desired action
+//                finish()
+//            }
+//
+//        }
+//
+//    }
+
+
 }
