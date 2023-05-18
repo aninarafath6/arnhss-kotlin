@@ -4,6 +4,8 @@ import android.content.Context
 import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -12,6 +14,8 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +35,8 @@ import java.io.InputStreamReader
 class SelectCountryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySelectCountryBinding
+    private  var liveCountryData = MutableLiveData<List<Country>>()
+    private lateinit var countryList: List<Country>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivitySelectCountryBinding.inflate(layoutInflater)
@@ -42,25 +48,28 @@ class SelectCountryActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.Default) {
 
-            val countryList: List<Country> = convertJsonToDataObjects()
+            countryList = convertJsonToDataObjects()
+
+            liveCountryData.postValue(countryList)
 
 
-            launch(Dispatchers.Main) {
-                binding.circularProgress.isVisible = false
-                setupCountryList(countryList)
-                print(countryList[0].name)
-
-                Log.d("sample", "hi")
-                Log.d("sample", "https://flagcdn.com/48x36/${countryList[0].code.lowercase()}.png")
-
-
-            }
 
         }
 
+        binding.errorMsg.isVisible = false
         handleOnBackPressed()
         searchToggleHandler()
+        onCountrySearchHandler()
 
+        liveCountryData.observe(this){country ->
+            binding.circularProgress.isVisible = false
+            setupCountryList(country)
+
+        }
+    }
+
+    fun getCountryLiveData(): LiveData<List<Country>> {
+        return liveCountryData
 
     }
 
@@ -72,21 +81,17 @@ class SelectCountryActivity : AppCompatActivity() {
         var isKeyboardOpen = imm.isActive
         val searchBox: EditText = binding.countrySearchBox
 
-
         binding.backPress.setOnClickListener {
-
-
             if (currentFocus != null && currentFocus!!.hasFocus()) {
                 imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
                 searchBox.clearFocus()
                 searchBox.isVisible = false
                 binding.countryAppbarTitle.isVisible = true
                 isKeyboardOpen = false
+                searchBox.setText("")
             } else {
-                // If the keyboard is not open, finish the activity
                 finish()
             }
-
         }
     }
 
@@ -136,13 +141,45 @@ class SelectCountryActivity : AppCompatActivity() {
                 }
                 searchBox.isVisible = false
             }
-
-
-
-
             Log.d("MainActivity", binding.countryAppbarTitle.isVisible.toString())
         }
     }
 
+    private fun onCountrySearchHandler() {
+        binding.countrySearchBox.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Log.d("MainActivity", s.toString())
+
+                val query = s.toString().lowercase()
+
+                if (query.isEmpty()) {
+                    liveCountryData.value = countryList
+                } else {
+                    val result = countryList.filter<Country> {
+                        it.name.contains(query,true) || it.code.contains(query,true) || it.dial_code.contains(
+                            query,true
+                        )
+                    }
+
+
+                    binding.errorMsg.isVisible = result.isEmpty()
+                    liveCountryData.value  = result
+
+
+                    Log.d("MainActivity",result.toString())
+
+
+
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+        })
+    }
 
 }
