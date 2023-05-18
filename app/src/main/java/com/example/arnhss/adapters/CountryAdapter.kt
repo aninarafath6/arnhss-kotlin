@@ -7,11 +7,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.arnhss.R
-import com.example.arnhss.types.Country
+import com.example.arnhss.models.Country
 
 
 class CountryAdapter(private var ctx:Context, private var countryList:List<Country>):RecyclerView.Adapter<CountryAdapter.ViewHolder>() {
@@ -35,7 +34,7 @@ class CountryAdapter(private var ctx:Context, private var countryList:List<Count
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val country:Country
+        val country: Country
         holder.countryName.text = countryList[position].name
         holder.countryCode.text = countryList[position].dial_code
 

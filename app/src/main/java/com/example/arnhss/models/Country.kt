@@ -1,4 +1,4 @@
-package com.example.arnhss.types
+package com.example.arnhss.models
 
 import android.widget.TextView
 

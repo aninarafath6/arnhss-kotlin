@@ -12,20 +12,20 @@
         android:theme="@style/Theme.Arnhss"
         tools:targetApi="31">
         <activity
-            android:name=".activities.SelectCountryActivity"
+            android:name=".ui.auth.country_select.onbaording.SelectCountryActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize"
             />
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".ui.auth.login.LoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize"
             />
         <activity
-            android:name=".activities.OnboardActivity"
+            android:name=".ui.onboarding.OnboardActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.splashActivity"
+            android:name=".ui.onboarding.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
