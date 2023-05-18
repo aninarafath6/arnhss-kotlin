@@ -4,12 +4,19 @@ import android.content.Context
 import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.arnhss.R
+import com.example.arnhss.adapters.CountryAdapter
 import com.example.arnhss.databinding.ActivitySelectCountryBinding
 import com.example.arnhss.types.Country
 import com.google.gson.Gson
@@ -32,47 +39,59 @@ class SelectCountryActivity : AppCompatActivity() {
 
         binding.circularProgress.isVisible = true
 
-//        onNavPop()
 
         lifecycleScope.launch(Dispatchers.Default) {
 
-            convertJsonToDataObjects()
+            val countryList: List<Country> = convertJsonToDataObjects()
 
 
             launch(Dispatchers.Main) {
                 binding.circularProgress.isVisible = false
+                setupCountryList(countryList)
+                print(countryList[0].name)
+
+                Log.d("sample", "hi")
+                Log.d("sample", "https://flagcdn.com/48x36/${countryList[0].code.lowercase()}.png")
+
+
             }
 
         }
 
-        onBackPressedDispatcher.addCallback(this,onBackPressCallback )
+        handleOnBackPressed()
+        searchToggleHandler()
+
 
     }
 
 
-    private val onBackPressCallback = object: OnBackPressedCallback(true){
-        override fun handleOnBackPressed() {
-            // Check if the keyboard is open
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            var isKeyboardOpen = imm.isAcceptingText
+    // handle the screen pop function+
+    private fun handleOnBackPressed() {
+//        // Check if the keyboard is open
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        var isKeyboardOpen = imm.isActive
+        val searchBox: EditText = binding.countrySearchBox
 
-            if (isKeyboardOpen) {
-                // If the keyboard is open, close it
-                imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
-                binding.countrySearchBox.clearFocus()
-                } else {
+
+        binding.backPress.setOnClickListener {
+
+
+            if (currentFocus != null && currentFocus!!.hasFocus()) {
+                imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+                searchBox.clearFocus()
+                searchBox.isVisible = false
+                binding.countryAppbarTitle.isVisible = true
+                isKeyboardOpen = false
+            } else {
                 // If the keyboard is not open, finish the activity
                 finish()
             }
-        }
 
+        }
     }
 
-
-
-
     private fun convertJsonToDataObjects(): List<Country> {
-        Thread.sleep(1000L)
+//        Thread.sleep(1000L)
         val fileName = "country_code.json"
         val inputStream = this.assets.open(fileName)
         val reader = BufferedReader(InputStreamReader(inputStream))
@@ -83,29 +102,47 @@ class SelectCountryActivity : AppCompatActivity() {
 
         return Gson().fromJson(jsonText, countryListType)
     }
-//
-//    private fun onNavPop(){
-//
-//
-//
-//        binding.backPress.setOnClickListener{
-//            // Check if the keyboard is open
-//            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//            val isKeyboardOpen = imm.isAcceptingText
-//
-//            if (isKeyboardOpen) {
-//                // If the keyboard is open, close it
-//                imm.hideSoftInputFromWindow(binding.backPress.windowToken, 0)
-//                binding.countrySearchBox.clearFocus()
-//                binding.backPress.clearFocus()
-//            } else {
-//                // If the keyboard is not open, finish the activity or perform your desired action
-//                finish()
-//            }
-//
-//        }
-//
-//    }
+
+
+    private fun setupCountryList(data: List<Country>) {
+        val rc: RecyclerView = binding.countryRecycler
+        val ll: LinearLayoutManager = LinearLayoutManager(this)
+
+        rc.layoutManager = ll
+        rc.adapter = CountryAdapter(this, data)
+    }
+
+
+    private fun searchToggleHandler() {
+
+        val searchBox: EditText = binding.countrySearchBox
+        val title: TextView = binding.countryAppbarTitle
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        searchBox.isVisible = false
+        binding.searchIcon.setOnClickListener {
+            title.isVisible = !title.isVisible
+
+            if (!searchBox.isVisible) {
+                searchBox.isVisible = true
+                searchBox.requestFocus()
+                imm.showSoftInput(searchBox, InputMethodManager.SHOW_IMPLICIT)
+
+            } else {
+                val isKeyboardOpen = imm.isAcceptingText
+                if (isKeyboardOpen) {
+                    imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+                    searchBox.clearFocus()
+                }
+                searchBox.isVisible = false
+            }
+
+
+
+
+            Log.d("MainActivity", binding.countryAppbarTitle.isVisible.toString())
+        }
+    }
 
 
 }

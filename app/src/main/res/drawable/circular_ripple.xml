@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#99FFFFFF">
+    <item android:id="@android:id/redo">
+        <shape android:shape="oval">
+            <corners android:radius="20dp"/>
+            <solid android:color="#05000000" />
+            <padding android:bottom="2dp"/>
+            <padding android:top="2dp"/>
+            <padding android:right="2dp"/>
+            <padding android:left="2dp"/>
+        </shape>
+    </item>
+</ripple>

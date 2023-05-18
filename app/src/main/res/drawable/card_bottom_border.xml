@@ -1,0 +1,8 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@android:color/transparent" />
+    <stroke
+        android:width="2dp"
+        android:color="#FF0000" /> <!-- Replace with desired border color -->
+    <padding
+        android:bottom="2dp" /> <!-- Adjust the bottom padding to control the thickness of the border -->
+</shape>

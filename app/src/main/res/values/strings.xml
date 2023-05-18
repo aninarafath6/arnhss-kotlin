@@ -13,4 +13,9 @@
     <string name="_91">+91</string>
     <string name="input_hint_for_phone_number">Enter your mobile number</string>
     <string name="terms_conditions_title">By continuing, you agree to our Terms of Terms of Service and Privacy Policy</string>
+    <string name="india">India</string>
+    <string name="code">+91</string>
+    <string name="get_otp">Get OTP</string>
+    <string name="choose_your_country">Choose your country</string>
+    <string name="choose_country_title">Choose your country</string>
 </resources>
