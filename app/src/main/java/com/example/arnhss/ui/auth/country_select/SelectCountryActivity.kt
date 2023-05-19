@@ -1,6 +1,7 @@
 package com.example.arnhss.ui.auth.country_select
 
 import android.content.Context
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -18,25 +19,52 @@ import com.example.arnhss.adapters.CountryAdapter
 import com.example.arnhss.databinding.ActivitySelectCountryBinding
 import com.example.arnhss.models.Country
 
-class SelectCountryActivity : AppCompatActivity() {
+class SelectCountryActivity : AppCompatActivity(), TextWatcher {
 
     private lateinit var binding: ActivitySelectCountryBinding
     private lateinit var selectCountryMvvm: SelectCountryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         // initializations
         binding = ActivitySelectCountryBinding.inflate(layoutInflater)
         selectCountryMvvm =
             ViewModelProvider(this@SelectCountryActivity)[SelectCountryViewModel::class.java]
+        setContentView(binding.root)
 
 
         binding.circularProgress.isVisible = true
-        selectCountryMvvm.init(this)
-        selectCountryMvvm.getCountryData()
+
+        Log.d("MainActivity", "${binding.countrySearchBox.text.toString()} hi from")
 
 
+        // backPress callback
+        val callback = object : OnBackPressedCallback(true) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            var isKeyboardOpen = imm.isActive
+            val searchBox: EditText = binding.countrySearchBox
 
+            override fun handleOnBackPressed() {
+
+                binding.countryAppbarTitle.isVisible = true
+                searchBox.isVisible = false
+
+                if (currentFocus != null && currentFocus!!.hasFocus()) {
+
+                    binding.countryAppbarTitle.isVisible = true
+                    searchBox.isVisible = false
+                    imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+                    searchBox.clearFocus()
+                    searchBox.isVisible = false
+                    binding.countryAppbarTitle.isVisible = true
+                    isKeyboardOpen = false
+                    searchBox.setText("")
+                } else {
+                    finish()
+                }
+            }
+        }
 
         onBackPressedDispatcher.addCallback(this, callback)
         binding.errorMsg.isVisible = false
@@ -50,46 +78,22 @@ class SelectCountryActivity : AppCompatActivity() {
         // observe the live country data
         selectCountryMvvm.getLiveCountryData().observe(this) { country ->
             binding.circularProgress.isVisible = false
+            selectCountryMvvm.setErrorState(country.isEmpty())
             setupCountryList(country)
         }
-
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-    }
-
-
-    // backPress callback
-    private val callback = object : OnBackPressedCallback(true) {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        var isKeyboardOpen = imm.isActive
-        val searchBox: EditText = binding.countrySearchBox
-
-        override fun handleOnBackPressed() {
-
-            binding.countryAppbarTitle.isVisible = true
-            searchBox.isVisible = false
-
-            if (currentFocus != null && currentFocus!!.hasFocus()) {
-
-                binding.countryAppbarTitle.isVisible = true
-                searchBox.isVisible = false
-                imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
-                searchBox.clearFocus()
-                searchBox.isVisible = false
-                binding.countryAppbarTitle.isVisible = true
-                isKeyboardOpen = false
-                searchBox.setText("")
-
-            } else {
-                finish()
-            }
+        selectCountryMvvm.getIErrorState().observe(this@SelectCountryActivity) { isEmpty ->
+            binding.errorMsg.isVisible = isEmpty
         }
+
+        binding.countrySearchBox.setText("")
+
+
     }
 
 
     // handle the screen pop function+
     private fun handleOnBackPressed() {
-//        // Check if the keyboard is open
+        // Check if the keyboard is open
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         var isKeyboardOpen = imm.isActive
         val searchBox: EditText = binding.countrySearchBox
@@ -140,26 +144,26 @@ class SelectCountryActivity : AppCompatActivity() {
                 }
                 searchBox.isVisible = false
             }
-            Log.d("MainActivity", binding.countryAppbarTitle.isVisible.toString())
         }
     }
 
     private fun onCountrySearchHandler() {
-        binding.countrySearchBox.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+        binding.countrySearchBox.removeTextChangedListener(this)
+        binding.countrySearchBox.addTextChangedListener(this)
+    }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val response = selectCountryMvvm.searchHandler(s.toString())
-                selectCountryMvvm.getIErrorState().observe(this@SelectCountryActivity) { isEmpty ->
-                    binding.errorMsg.isVisible = isEmpty
-                }
-            }
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
-            override fun afterTextChanged(s: Editable?) {
-            }
+    }
 
-        })
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        val response = selectCountryMvvm.searchHandler(s.toString())
+
+
+    }
+
+    override fun afterTextChanged(s: Editable?) {
+
     }
 
 }

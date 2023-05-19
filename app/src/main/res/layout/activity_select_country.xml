@@ -55,11 +55,13 @@
                 android:autofillHints="false"
                 android:background="@null"
                 android:hint="Search here you country code.."
+                android:saveEnabled="false"
                 android:inputType="text"
                 android:soundEffectsEnabled="true"
                 android:textColor="@color/white"
                 android:textColorHint="#D1D1D1"
                 android:textCursorDrawable="@drawable/custom_cursor"
+
                 android:textSize="15sp" />
 
             <androidx.appcompat.widget.AppCompatImageView
