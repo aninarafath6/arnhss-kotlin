@@ -7,7 +7,7 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.example.arnhss.R
 import com.example.arnhss.databinding.ActivityLoginBinding
-import com.example.arnhss.ui.auth.country_select.onbaording.SelectCountryActivity
+import com.example.arnhss.ui.auth.country_select.SelectCountryActivity
 
 class LoginActivity : AppCompatActivity() {
 

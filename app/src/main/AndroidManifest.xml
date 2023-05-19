@@ -12,7 +12,7 @@
         android:theme="@style/Theme.Arnhss"
         tools:targetApi="31">
         <activity
-            android:name=".ui.auth.country_select.onbaording.SelectCountryActivity"
+            android:name=".ui.auth.country_select.SelectCountryActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize"
             />
