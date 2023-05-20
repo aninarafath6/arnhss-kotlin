@@ -1,7 +1,8 @@
 package com.example.arnhss.ui.auth.country_select
 
+import android.app.Activity
 import android.content.Context
-import android.content.res.Configuration
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -17,12 +18,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.arnhss.adapters.CountryAdapter
 import com.example.arnhss.databinding.ActivitySelectCountryBinding
+import com.example.arnhss.interfaces.OnItemClickListener
 import com.example.arnhss.models.Country
+import com.example.arnhss.ui.auth.login.LoginActivity
 
-class SelectCountryActivity : AppCompatActivity(), TextWatcher {
+class SelectCountryActivity : AppCompatActivity(), TextWatcher, OnItemClickListener {
 
     private lateinit var binding: ActivitySelectCountryBinding
     private lateinit var selectCountryMvvm: SelectCountryViewModel
+    private lateinit var selectedCountry:Country
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,11 +90,10 @@ class SelectCountryActivity : AppCompatActivity(), TextWatcher {
         }
 
         binding.countrySearchBox.setText("")
-
-
     }
 
 
+    // Custom Functions
     // handle the screen pop function+
     private fun handleOnBackPressed() {
         // Check if the keyboard is open
@@ -117,7 +120,7 @@ class SelectCountryActivity : AppCompatActivity(), TextWatcher {
         val rc: RecyclerView = binding.countryRecycler
         val ll: LinearLayoutManager = LinearLayoutManager(this)
         rc.layoutManager = ll
-        rc.adapter = CountryAdapter(this, data)
+        rc.adapter = CountryAdapter(this, data,this)
     }
 
 
@@ -153,17 +156,23 @@ class SelectCountryActivity : AppCompatActivity(), TextWatcher {
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
     }
 
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         val response = selectCountryMvvm.searchHandler(s.toString())
-
-
     }
 
     override fun afterTextChanged(s: Editable?) {
+    }
 
+    override fun onItemClick(data: Country) {
+//        Toast.makeText(this, selectedCountry.name, Toast.LENGTH_LONG).show()
+        this.selectedCountry= data
+
+        val resultIntent = Intent()
+        resultIntent.putExtra("selectedCountry", this.selectedCountry)
+        setResult(Activity.RESULT_OK, resultIntent)
+        finish()
     }
 
 }

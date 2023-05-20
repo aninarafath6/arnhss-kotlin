@@ -10,17 +10,20 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.arnhss.R
+import com.example.arnhss.interfaces.OnItemClickListener
 import com.example.arnhss.models.Country
 
 
-class CountryAdapter(private var ctx:Context, private var countryList:List<Country>):RecyclerView.Adapter<CountryAdapter.ViewHolder>() {
+class CountryAdapter(private var ctx:Context, private var countryList:List<Country>,private  val listener:OnItemClickListener):RecyclerView.Adapter<CountryAdapter.ViewHolder>() {
+    private var onItemClickListener: OnItemClickListener? = null
 
     class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
         var img:ImageView = itemView.findViewById<ImageView>(R.id.row_flag)
         var countryName:TextView = itemView.findViewById<TextView>(R.id.country_name)
         var countryCode:TextView = itemView.findViewById<TextView>(R.id.row_country_code)
-
         var cardView:CardView = itemView.findViewById<CardView>(R.id.country_card)
+
+
     }
 
 
@@ -47,7 +50,14 @@ class CountryAdapter(private var ctx:Context, private var countryList:List<Count
             .placeholder(R.drawable.india_flag)  // Placeholder image
             .into(holder.img)
 
-
+        holder.cardView.setOnClickListener{
+            listener.onItemClick(countryList[position])
+        }
 
     }
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        onItemClickListener = listener
+    }
 }
+

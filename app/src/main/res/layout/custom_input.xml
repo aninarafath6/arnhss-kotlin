@@ -25,6 +25,7 @@
        android:id="@+id/country_display"
 >
        <TextView
+           android:id="@+id/code"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:text="@string/_91"
@@ -34,6 +35,7 @@
            tools:ignore="RtlSymmetry" />
 
        <ImageView
+           android:id="@+id/flag"
            android:layout_width="15dp"
            android:layout_height="wrap_content"
            android:src="@drawable/india_flag"
