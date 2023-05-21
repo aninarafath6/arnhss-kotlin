@@ -62,9 +62,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/login_banner"
-                tools:ignore="RtlSymmetry"
-
-                />
+                tools:ignore="RtlSymmetry" />
 
             <TextView
                 android:id="@+id/subtitle"
@@ -91,12 +89,10 @@
                 android:layout_marginHorizontal="12dp"
                 android:layout_marginTop="0dp"
                 android:background="@drawable/button_rounded_bg"
-                android:padding="15dp"
+                android:padding="5dp"
                 android:text="@string/get_otp"
                 android:textColor="@color/white"
                 app:layout_constraintTop_toBottomOf="@id/mobile_input" />
-
-
         </LinearLayout>
 
     </ScrollView>
